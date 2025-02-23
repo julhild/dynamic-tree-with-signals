@@ -1,4 +1,5 @@
 import { signal, Injectable } from '@angular/core';
+import { Router } from '@angular/router';
 import { TreeNode } from 'primeng/api';
 
 export interface Work {
@@ -26,6 +27,8 @@ export class SignalsService {
   selectedNode = signal<TreeNode | null>(null);
   displayNumberOfNodes = 5;
 
+  constructor(private readonly router: Router) {}
+
   setTreeNodes(authors: Author[]): void {
     const nodes: TreeNode[] = [];
     this.allData = authors.sort((a, b) => a.name.toLowerCase().localeCompare(b.name.toLowerCase()));
@@ -46,6 +49,7 @@ export class SignalsService {
     defaultNode.expanded = true;
 
     this.selectedNode.set(defaultNode);
+    this.router.navigate(['/author', defaultNode.key]);
   }
 
   setAuthorNode(author: Author) {
@@ -54,6 +58,7 @@ export class SignalsService {
       icon: 'fa-regular fa-user',
       data: author,
       key: author.key,
+      type: 'author',
       children: this.getWorkNodes(author.works)
     };
 
@@ -69,7 +74,8 @@ export class SignalsService {
           label: work.title,
           icon: 'fa-solid fa-book',
           data: work,
-          key: work.key
+          key: work.key,
+          type: 'work'
         };
 
         nodes.push(node);
