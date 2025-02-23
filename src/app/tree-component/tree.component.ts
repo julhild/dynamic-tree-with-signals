@@ -1,7 +1,8 @@
-import { Component, inject, OnInit } from '@angular/core';
-import { TreeNode } from 'primeng/api';
+import { Component, inject, OnInit, ViewEncapsulation } from '@angular/core';
 import { Author, SignalsService, Work } from '../signals.service';
 import { Tree } from 'primeng/tree';
+import { ButtonModule } from 'primeng/button';
+import { TooltipModule } from 'primeng/tooltip';
 import { HttpClient } from '@angular/common/http';
 import { lastValueFrom } from 'rxjs';
 
@@ -9,14 +10,18 @@ import { lastValueFrom } from 'rxjs';
     selector: 'app-tree',
     templateUrl: './tree.component.html',
     standalone: true,
-    imports: [Tree],
-    providers: [SignalsService, HttpClient]
+    imports: [Tree, ButtonModule, TooltipModule],
+  providers: [SignalsService, HttpClient],
+    encapsulation: ViewEncapsulation.None
 })
 
 export class TreeComponent implements OnInit {
   private signalsService = inject(SignalsService);
   nodes = this.signalsService.treeNodes.asReadonly();
-  numberOfNodes = 10;
+  isLoading = this.signalsService.isTreeLoading.asReadonly();
+  selectedNode = this.signalsService.selectedNode.asReadonly();
+
+  numberOfLoadedNodes = 10;
 
   constructor(
     private http: HttpClient
@@ -26,7 +31,8 @@ export class TreeComponent implements OnInit {
     let authors: Author[] = [];
     let workCalls: Promise<any>[] = [];
 
-    this.http.get(`https://openlibrary.org/search/authors.json?q=tolstoy&limit=${this.numberOfNodes}&fields=key,name`).subscribe(
+    this.http.get(`https://openlibrary.org/search/authors.json?q=christie&limit=${this.numberOfLoadedNodes}&fields=key,name`)
+    .subscribe(
       {
         next: (data: any) => {
           authors = data.docs as Author[];
@@ -58,7 +64,13 @@ export class TreeComponent implements OnInit {
 
           authors[index].works.push(work);
         });
+
+        authors[index].works = authors[index].works.sort((a, b) => a.title.toLowerCase().localeCompare(b.title.toLowerCase()));
       })
     ).finally(() => this.signalsService.setTreeNodes(authors))
+  }
+
+  onAddAuthor() {
+    this.signalsService.addAuthorNode();
   }
 }

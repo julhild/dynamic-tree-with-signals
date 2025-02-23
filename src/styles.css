@@ -5,3 +5,7 @@
 * {
   font-family: "Verdana", Verdana, sans-serif;
 }
+
+.p-tree .p-tree-root-children {
+  height: calc(100vh - 10rem);
+}

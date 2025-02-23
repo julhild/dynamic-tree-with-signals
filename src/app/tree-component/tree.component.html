@@ -1,3 +1,26 @@
 <div class="card">
-  <p-tree [value]="nodes()" styleClass="w-20rem h-full" />
+  <div class="flex justify-content-center gap-2">
+    <p-button
+      severity="success"
+      [rounded]="true"
+      icon="fa-regular fa-plus"
+      [disabled]="nodes().length === numberOfLoadedNodes"
+      label="Add author"
+      (click)="onAddAuthor()"
+    />
+    <p-button
+      severity="danger"
+      [rounded]="true"
+      label="Remove author"
+      [disabled]="!selectedNode() || nodes().length === 0"
+      icon="fa-regular fa-minus"
+    />
+  </div>
+  <p-tree
+    [value]="nodes()"
+    [loading]="isLoading()"
+    selectionMode="single"
+    [selection]="selectedNode()"
+    styleClass="w-20rem"
+  />
 </div>
