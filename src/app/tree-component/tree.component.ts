@@ -1,11 +1,12 @@
 import { Component, inject, OnInit, ViewEncapsulation } from '@angular/core';
-import { Author, SignalsService, Work } from '../signals.service';
+import { SignalsService } from '../signals.service';
 import { Tree, TreeNodeSelectEvent } from 'primeng/tree';
 import { ButtonModule } from 'primeng/button';
 import { TooltipModule } from 'primeng/tooltip';
 import { HttpClient } from '@angular/common/http';
 import { lastValueFrom } from 'rxjs';
 import { Router } from '@angular/router';
+import { Author, Work } from '../models';
 
 @Component({
     selector: 'app-tree',

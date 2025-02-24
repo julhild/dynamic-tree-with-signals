@@ -1,19 +1,7 @@
 import { signal, Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { TreeNode } from 'primeng/api';
-
-export interface Work {
-  key: string,
-  title: string,
-  created: Date,
-  lastModified: Date
-}
-
-export interface Author {
-  key: string,
-  name: string,
-  works: Work[]
-}
+import { Author, Work } from './models';
 
 @Injectable({
   providedIn: 'root',

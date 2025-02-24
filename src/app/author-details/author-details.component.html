@@ -1,1 +1,42 @@
-author details here: {{ key }}
+<div class="p-3 border-primary border-round border-1">
+  <div class="grid">
+    <div class="col-12 flex justify-content-center">
+      <img
+        [src]="'https://covers.openlibrary.org/a/olid/' + key + '-M.jpg'"
+        alt=""
+      />
+    </div>
+  </div>
+  <div class="grid">
+    <div class="col-6 flex justify-content-end text-primary font-bold pr-3">
+      Author name
+    </div>
+    <div class="col-6">
+      {{ author.name }}
+    </div>
+  </div>
+  <div class="grid">
+    <div class="col-6 flex justify-content-end text-primary font-bold pr-3">
+      Birth data
+    </div>
+    <div class="col-6">
+      {{ author.birthDate }}
+    </div>
+  </div>
+  <div class="grid">
+    <div class="col-6 flex justify-content-end text-primary font-bold pr-3">
+      Death date
+    </div>
+    <div class="col-6">
+      {{ author.deathDate }}
+    </div>
+  </div>
+  <div class="grid">
+    <div class="col-6 flex justify-content-end text-primary font-bold pr-3">
+      Bio
+    </div>
+    <div class="col-6">
+      {{ author.bio }}
+    </div>
+  </div>
+</div>
