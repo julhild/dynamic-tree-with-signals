@@ -13,7 +13,7 @@ import { Author, Work } from '../models';
     templateUrl: './tree.component.html',
     standalone: true,
     imports: [Tree, ButtonModule, TooltipModule],
-  providers: [SignalsService, HttpClient],
+    providers: [HttpClient],
     encapsulation: ViewEncapsulation.None
 })
 

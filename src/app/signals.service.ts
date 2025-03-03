@@ -1,14 +1,12 @@
 import { signal, Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { TreeNode } from 'primeng/api';
-import { Author, Work } from './models';
+import { Author, AuthorDetails, Work } from './models';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable()
 
 export class SignalsService {
-  // a fake back end
+  // a fake back en
   allData: Author[] = [];
   treeNodes = signal<TreeNode[]>([]);
   isTreeLoading = signal<boolean>(true);
@@ -32,6 +30,7 @@ export class SignalsService {
     this.isTreeLoading.set(false);
   }
 
+  // TODO set from direct link
   setSelectedNode() {
     const defaultNode = this.treeNodes()[0];
     defaultNode.expanded = true;
@@ -76,9 +75,26 @@ export class SignalsService {
   addAuthorNode() {
     const authorIndex = this.treeNodes().length;
     const newNode = this.setAuthorNode(this.allData[authorIndex]);
+    console.log('newNode: ', this.treeNodes());
 
     this.treeNodes.update(nodes => nodes.concat(newNode))
   }
 
+  updateAuthorNode(author: AuthorDetails) {
+    this.treeNodes.update(nodes => nodes.map(node => {
+      if (node.key === author.key) {
+        node.label = author.name;
+        node.data = author;
+
+      }
+
+      return node;
+    }));
+  }
+
+  // TODO: add addWorkNode
+  // TODO: add updateWorkNode
+  // TODO: add deleteAuthorNode
+  // TODO: add deleteWorkNode
 }
 

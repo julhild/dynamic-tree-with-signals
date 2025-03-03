@@ -1,51 +1,54 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { SignalsService } from '../signals.service';
+import { ButtonModule } from 'primeng/button';
+import { InputTextModule } from 'primeng/inputtext';
 
 import { HttpClient } from '@angular/common/http';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { AuthorDetails } from '../models';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-author-details',
   templateUrl: './author-details.component.html',
   standalone: true,
-  imports: [],
-  providers: [SignalsService, HttpClient],
+  imports: [FormsModule, ButtonModule, InputTextModule],
+  providers: [HttpClient],
   encapsulation: ViewEncapsulation.None
 })
 
 export class AuthorDetailsComponent implements OnInit {
-  key = '';
   author = new AuthorDetails();
 
   constructor(
-    private readonly router: Router,
     private http: HttpClient,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private signalsService: SignalsService
   ) {}
 
   ngOnInit(): void {
     this.route.params.subscribe(params => {
-      this.key = params['authorKey'];
+      const authorKey = params['authorKey'];
 
-      if (this.key !== undefined) {
-        this.http.get(`https://openlibrary.org/authors/${this.key}.json`)
+      if (authorKey !== undefined) {
+        this.http.get(`https://openlibrary.org/authors/${authorKey}.json`)
           .subscribe({
             next: (data: unknown) => {
-            const authorData = data as Record<string, undefined>;
-            this.author = {
-              key: this.key,
-              name: authorData['name'] ?? '-',
-              birthDate: authorData['birth_date'] ?? '-',
-              deathDate: authorData['death_date'] ?? '-',
-              bio: authorData['bio']?.['value'] ?? '-'
-            };
-            console.log('author works: ');
-              console.log(authorData);
-
+              const authorData = data as Record<string, undefined>;
+              this.author = {
+                key: authorKey,
+                name: authorData['name'] ?? '-',
+                birthDate: authorData['birth_date'] ?? '-',
+                deathDate: authorData['death_date'] ?? '-',
+                bio: authorData['bio']?.['value'] ?? '-'
+              };
             }
         });
       }
     });
+  }
+
+  onUpdateAuthor() {
+    this.signalsService.updateAuthorNode(this.author);
   }
 }

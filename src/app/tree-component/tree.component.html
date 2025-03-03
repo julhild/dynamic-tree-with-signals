@@ -2,7 +2,6 @@
   <div class="flex justify-content-center gap-2">
     <p-button
       severity="success"
-      [rounded]="true"
       icon="fa-regular fa-plus"
       [disabled]="nodes().length === numberOfLoadedNodes"
       label="Add author"
@@ -10,7 +9,6 @@
     />
     <p-button
       severity="danger"
-      [rounded]="true"
       label="Remove author"
       [disabled]="!selectedNode() || nodes().length === 0"
       icon="fa-regular fa-minus"
