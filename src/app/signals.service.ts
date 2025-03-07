@@ -1,5 +1,5 @@
 import { signal, Injectable } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { TreeNode } from 'primeng/api';
 import { Author, AuthorDetails, Work } from './models';
 
@@ -13,7 +13,7 @@ export class SignalsService {
   selectedNode = signal<TreeNode | null>(null);
   displayNumberOfNodes = 5;
 
-  constructor(private readonly router: Router) {}
+  constructor(private readonly router: Router, private readonly route: ActivatedRoute) {}
 
   setTreeNodes(authors: Author[]): void {
     const nodes: TreeNode[] = [];
@@ -30,8 +30,52 @@ export class SignalsService {
     this.isTreeLoading.set(false);
   }
 
-  // TODO set from direct link
   setSelectedNode() {
+    this.route.params.subscribe(params => {
+      let foundNode: TreeNode | undefined = undefined;
+
+      if (params['authorKey']) {
+        foundNode = this.treeNodes().find(node => node.key === params['authorKey']);
+      } else if (params['workKey']) {
+        foundNode = this.treeNodes().find(node => node.children?.some(child => child.key === params['workKey']));
+      }
+
+      console.log('params: ', params);
+
+      if (foundNode === undefined) {
+        // this.setDefaultNode();
+      } else {
+        this.selectedNode.set(foundNode);
+      }
+    });
+
+    const routeParts = this.router.url.split('/');
+    let foundNode: TreeNode | undefined = undefined;
+
+      if (routeParts[1] === 'author') {
+        foundNode = this.treeNodes().find(node => node.key === routeParts[2]);
+      } else if (routeParts[1] === 'work') {
+        const workKey = routeParts[2].replaceAll('%2F', '/');
+
+        console.log(this.treeNodes(), workKey)
+
+        // TODO user reduce
+        foundNode = this.treeNodes().find(node => {
+          node.children?.some(child => child.key === workKey)
+        });
+      }
+
+        console.log(foundNode)
+
+      if (foundNode === undefined) {
+        // this.setDefaultNode();
+      } else {
+        foundNode.expanded = true;
+        this.selectedNode.set(foundNode);
+      }
+  }
+
+  setDefaultNode() {
     const defaultNode = this.treeNodes()[0];
     defaultNode.expanded = true;
 
