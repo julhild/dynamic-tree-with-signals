@@ -14,7 +14,6 @@ import { ActivatedRoute, Router } from '@angular/router';
 })
 
 export class WorkDetailsComponent implements OnInit {
-
   key = '';
 
   constructor(private readonly router: Router,

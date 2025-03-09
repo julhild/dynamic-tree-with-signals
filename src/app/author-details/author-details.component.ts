@@ -51,4 +51,8 @@ export class AuthorDetailsComponent implements OnInit {
   onUpdateAuthor() {
     this.signalsService.updateAuthorNode(this.author);
   }
+
+  onDeleteAuthor() {
+    this.signalsService.deleteAuthorNode(this.author);
+  }
 }

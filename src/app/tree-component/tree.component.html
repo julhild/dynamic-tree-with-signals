@@ -1,17 +1,12 @@
 <div class="card">
-  <div class="flex justify-content-center gap-2">
+  <div class="flex justify-content-center w-full">
     <p-button
-      severity="success"
-      icon="fa-regular fa-plus"
+      class="w-full"
+      styleClass="w-full"
+      icon="fa-solid fa-user-plus"
       [disabled]="nodes().length === numberOfLoadedNodes"
       label="Add author"
       (click)="onAddAuthor()"
-    />
-    <p-button
-      severity="danger"
-      label="Remove author"
-      [disabled]="!selectedNode() || nodes().length === 0"
-      icon="fa-regular fa-minus"
     />
   </div>
   <p-tree
