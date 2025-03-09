@@ -1,1 +1,9 @@
-work details: {{ key }}
+<img
+  class="z-2"
+  [src]="'https://covers.openlibrary.org/b/id/' + work.cover + '-M.jpg'"
+  alt="No picture"
+/>
+
+@for(subject of work.subjects; track subject) {
+<p-tag value="{{ subject }}" class="m-1"></p-tag>
+}

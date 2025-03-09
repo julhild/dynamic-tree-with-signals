@@ -1,11 +1,14 @@
 <div class="p-3 border-primary border-round border-1">
   <div class="grid">
     <div class="col-4 flex justify-content-end pr-3 align-items-end">
-      <p-button label="Add work" icon="fa-solid fa-plus"></p-button>
+      <p-button
+        label="Add work"
+        icon="fa-solid fa-plus"
+        (onClick)="onAddWork()"
+      ></p-button>
     </div>
     <div class="col-8">
       <img
-        class="z-2"
         [src]="'https://covers.openlibrary.org/a/olid/' + author.key + '-M.jpg'"
         alt="No picture"
       />

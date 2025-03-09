@@ -2,36 +2,50 @@ import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { SignalsService } from '../signals.service';
 
 import { HttpClient } from '@angular/common/http';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
+import { WorkDetails } from '../models';
+import { TagModule} from 'primeng/tag';
 
 @Component({
   selector: 'app-work-details',
   templateUrl: './work-details.component.html',
   standalone: true,
-  imports: [],
+  imports: [TagModule],
   providers: [SignalsService, HttpClient],
   encapsulation: ViewEncapsulation.None
 })
 
 export class WorkDetailsComponent implements OnInit {
-  key = '';
+  work = new WorkDetails();
 
-  constructor(private readonly router: Router,
+  constructor(
+    private http: HttpClient,
     private route: ActivatedRoute
   ) {}
 
   ngOnInit(): void {
-    this.route.params.subscribe(params => this.key = params['workKey'])
+    this.route.params.subscribe(params => {
+      const workKey = params['workKey'];
 
-            // how to get work details
-    // this.http.get(this.openLibraryApi + 'works/OL12744320W.json')
-    //   .subscribe(
-    //     {
-    //       next: (workData: any) => {
+      if (workKey !== undefined) {
+        this.http.get(`https://openlibrary.org${workKey}.json`)
+          .subscribe(
+            {
+              next: (data: unknown) => {
 
-    //     console.log('work details: ');
-    //     console.log(workData);
-    //   }
-    // });
+                const workData = data as Record<string, undefined>;
+
+                this.work = {
+                  key: workKey,
+                  title: workData['title'] ?? '-',
+                  cover: workData['covers'] ? (workData['covers'][0] ?? '') : '',
+                  subjects: workData['subjects'] ?? []
+                }
+          }
+        });
+      }
+    });
+
+
   }
 }

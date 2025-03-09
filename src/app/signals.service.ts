@@ -127,7 +127,19 @@ export class SignalsService {
     this.setDefaultNode();
   }
 
-  // TODO: add addWorkNode
+  addWorkNode(author: AuthorDetails) {
+    const authorNode = this.treeNodes().find(node => node.key === author.key);
+    const allWords = this.allData.find(n => n.key === author.key)?.works ?? [];
+
+    const notShownWorks = allWords.filter(work => !authorNode?.children?.find(node => node.key === work.key));
+
+    if (notShownWorks.length > 0) {
+      const newWorkNode = this.getWorkNodes(notShownWorks)[0];
+      authorNode?.children?.push(newWorkNode);
+      this.treeNodes.update(nodes => nodes);
+    }
+  }
+
   // TODO: add updateWorkNode
   // TODO: add deleteWorkNode
 }
