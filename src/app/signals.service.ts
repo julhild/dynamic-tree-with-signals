@@ -1,11 +1,12 @@
 import { signal, Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { TreeNode } from 'primeng/api';
-import { Author, AuthorDetails, Work } from './models';
+import { Author, AuthorDetails, Work, WorkDetails } from './models';
 
 @Injectable()
 
 export class SignalsService {
+
   // a fake back end
   allData: Author[] = [];
   treeNodes = signal<TreeNode[]>([]);
@@ -140,7 +141,35 @@ export class SignalsService {
     }
   }
 
-  // TODO: add updateWorkNode
-  // TODO: add deleteWorkNode
+  updateWorkNode(work: WorkDetails) {
+    const treeNodes = this.treeNodes().map(node => {
+      if (node.children?.find(child => child.key === work.key)) {
+        node.children = node.children.map(child => {
+          if (child.key === work.key) {
+            child.label = work.title;
+            child.data = work;
+          }
+
+          return child;
+        });
+      }
+
+      return node;
+    });
+
+    this.treeNodes.set(treeNodes);
+  }
+
+  deleteWorkNode(work: WorkDetails) {
+    const authorNode = this.treeNodes().find(node => node.children?.find(child => child.key === work.key));
+
+    if (authorNode !== undefined) {
+      authorNode.children = authorNode.children?.filter(node => node.key !== work.key);
+      this.treeNodes.update(nodes => nodes);
+
+      this.router.navigate(['/author', authorNode.key]);
+      this.selectedNode.set(authorNode);
+    }
+  }
 }
 

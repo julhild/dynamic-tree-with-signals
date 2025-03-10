@@ -1,9 +1,60 @@
-<img
-  class="z-2"
-  [src]="'https://covers.openlibrary.org/b/id/' + work.cover + '-M.jpg'"
-  alt="No picture"
-/>
+<div class="p-3 border-primary border-round border-1">
+  <div class="grid">
+    <div class="col-4 flex justify-content-end pr-3 align-items-end"></div>
+    <div class="col-8">
+      <img
+        [src]="'https://covers.openlibrary.org/b/id/' + work.cover + '-M.jpg'"
+        alt="No picture"
+      />
+    </div>
+  </div>
+  <div class="grid">
+    <div
+      class="col-4 flex justify-content-end text-primary align-items-begin font-bold text-right pr-3"
+    >
+      Change work name to update the tree menu
+    </div>
+    <div class="col w-10rem">
+      <input
+        type="text"
+        pInputText
+        label=""
+        class="w-full"
+        styleClass="w-full"
+        [(ngModel)]="work.title"
+      />
+    </div>
+    <div class="col-fixed">
+      <p-button
+        label="Apply"
+        icon="fa-solid fa-check"
+        [disabled]="work.title === ''"
+        (onClick)="onUpdateWork()"
+      ></p-button>
+    </div>
+  </div>
+  <div class="grid">
+    <div
+      class="col-4 flex justify-content-end text-color-secondary font-bold pr-3"
+    >
+      Subjects
+    </div>
+    <div class="col-8">
+      @if(work.subjects.length === 0) { N/A } @else { @for(subject of
+      work.subjects; track subject) {
+      <p-tag value="{{ subject }}" class="m-1"></p-tag>
+      } }
+    </div>
+  </div>
 
-@for(subject of work.subjects; track subject) {
-<p-tag value="{{ subject }}" class="m-1"></p-tag>
-}
+  <div class="grid mt-0">
+    <div class="col-12 flex justify-content-end">
+      <p-button
+        severity="danger"
+        label="Remove work"
+        icon="fa-solid fa-file-circle-minus"
+        (onClick)="onDeleteWork()"
+      />
+    </div>
+  </div>
+</div>
